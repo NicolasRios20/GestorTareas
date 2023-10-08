@@ -7,6 +7,36 @@ use App\Models\ModelTasks;
 
 class ControllerTasks extends Controller
 {
+    // funtion para obtener todas las tareas
+    public function getTasks(Request $request)
+    {
+        try {
+
+            $dataTasks = ModelTasks::getTasks();
+            return response()->json(['dataTasks' => $dataTasks], 200);
+
+        } catch (\Exeption $e) {
+            return response()->json(['error' => 'A ocurrido un error al obtener las tareas'], 500);
+        }
+    }
+
+
+    // funcion para obtener una tarea
+    public function getTask(Request $request)
+    {
+
+        try {
+
+            $id_task = $request->input('id_task');
+            $dataTask = ModelTasks::getTask($id_task);
+            return response()->json(['dataTask' => $dataTask], 500);
+
+        } catch (\Eception $e) {
+            return response()->json(['error' => 'A ocurrido un error al obtener la tarea'], 500);
+        }
+    }
+
+
     // funcion para crear tareas
     public function createTasks(Request $request)
     {
@@ -73,8 +103,23 @@ class ControllerTasks extends Controller
     }
 
 
+    // funcion para eliminar tarea
+    public function deleteTask(Request $request)
+    {
+        try {
 
-// --------------------------general funtion tasks------------------------------------------------
+            $id_task = $request->input('id_task');
+            ModelTasks::deleteTask($id_task);
+            return response()->json(['message' => 'Tarea eliminada exitosamente'], 200);
+
+        } catch (\Exeption $e) {
+            return response()->json(['error' => 'Error al eliminar la tarea: ' . $e->getMessage()], 500);
+        }
+    }
+
+
+
+    // --------------------------general funtion tasks------------------------------------------------
 
     public function validateColorPriority($priority)
     {
