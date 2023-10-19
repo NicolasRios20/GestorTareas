@@ -1,0 +1,7 @@
+.main {
+    background-image: url('https://i.ibb.co/8rpVBXW/login.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 91.2vh;
+    display: flex;
+}
