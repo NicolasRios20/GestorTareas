@@ -12,10 +12,21 @@ class ControllerUser extends Controller
     {
         try {
             $dataUsers = ModelUser::getUsers();
-            return response()->json(['dataUsers' => $dataUsers], 200);
+            return view('users.user', ['dataUsers' => $dataUsers]);
 
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al consultar datos del usuario: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function optionUsers(Request $request)
+    {
+        try {
+            $dataUser = ModelUser::getUsers();
+            return view('users.userOptions', ['dataUsers' => $dataUser]);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al consultar datos de usuarios: ' . $e->getMessage()], 500);
         }
     }
 
@@ -63,12 +74,12 @@ class ControllerUser extends Controller
                 'email' => $request->input('email'),
                 'image' => $request->input('image'),
                 'rol' => $request->input('rol'),
-                'password' => Hash::make($request->input('password'))
+                // 'password' => Hash::make($request->input('password'))
             ];
 
             $updateData = array_filter($data);
-            ModelUser::updateUsers($updateData, $request->input('identification'));
-            return response()->json(['message' => 'Usuario actualizado exitosamente'], 200);
+            $data = ModelUser::updateUsers($updateData, $request->input('identification'));
+            return response()->json(['message' => 'Usuario actualizado exitosamente', 'data' => $data], 200);
 
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al actualizar el usuario: ' . $e->getMessage()], 500);

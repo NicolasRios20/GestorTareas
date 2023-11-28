@@ -17,19 +17,29 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-xxx" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
+    {{-- jquery --}}
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
     <!-- Styles -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> --}}
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/sidebar.css') }}" rel="stylesheet">
     <link href="{{ asset('css/login.css') }}" rel="stylesheet">
+    {{-- <link href="{{ asset('css/alertas.css') }}" rel="stylesheet"> --}}
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+
+    {{-- bootstrap --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 </head>
 <body>
     <div id="app" class="main-container">
         @auth
-
             {{-- sidebar --}}
             <div class="sidebar">
                 <div class="logo_details">
@@ -39,14 +49,21 @@
                 </div>
                 <ul class="nav-list">
                     <li>
-                        <a href="#">
+                        <a href="{{ route('home') }}">
                         <i class="bx bx-grid-alt"></i>
-                        <span class="link_name">Dashboard</span>
+                        <span class="link_name">Tareas</span>
                         </a>
-                        <span class="tooltip">Dashboard</span>
+                        <span class="tooltip">Lista Tareas</span>
                     </li>
                     <li>
-                        <a href="#">
+                        <a role="button" onclick="openModalCreateTasks()" data-bs-toggle="modal" data-bs-target="#createTasks">
+                            <i class="fas fa-plus"></i>
+                            <span class="link_name">Crear Tareas</span>
+                        </a>
+                        <span class="tooltip">Crear Tareas</span>
+                    </li>
+                    <li>
+                        <a href="{{ route('getUsers') }}"  >
                         <i class="bx bx-user"></i>
                         <span class="link_name">User</span>
                         </a>
@@ -65,14 +82,23 @@
             {{-- narvar --}}
             <section class="home-section">
                 <nav class="navbar navbar-expand-lg navbar1">
-                    <div class="container-fluid d-f justify-content-end">
-                        <div class="">
-                            <a class="buttonSalir" href="href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                    @csrf
-                                </form>
-                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#ffffff}</style><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"/></svg>
-                                Salir</a>
+                    <div class="container-fluid d-f justify-content-end col-12">
+                        <div class="row col-4 d-f justify-content-end align-items-center">
+                            <div class="col-9 row d-f justify-content-end ">
+                                <div class="col-10 d-flex justify-content-end align-items-center">
+                                    <p style="color: #ffffff; margin:0;"><img src="{{ asset('img/profile.png') }}" alt="" style="width: 30px"> {{auth()->user()->name}}</p>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <a class="buttonSalir" href="href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><style>svg{fill:#ffffff}</style><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"/></svg>
+                                    Salir
+                                </a>
+                            </div>
+
                         </div>
                     </div>
                 </nav>
@@ -88,7 +114,6 @@
             {{-- narvar no logueado --}}
             <nav class="navbar navbar-expand-md shadow-sm" style="background-color: #222439">
                 <div class="container">
-
                     <div class="">
                         <div class="logo_name">
                             <h4 style="color: #ffffff">
@@ -109,11 +134,6 @@
                                         </a>
                                     </li>
                                 @endif
-                                {{-- @if (Route::has('register'))
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('register') }}" style="color: #ffffff">{{ __('Register') }}</a>
-                                    </li>
-                                @endif --}}
                             @endguest
                         </ul>
                     </div>
@@ -129,8 +149,20 @@
     </div>
 
     <footer>
+        {{-- modales --}}
+        @if (Auth::check())
+            @include('users.editUser')
+            @include('tasks.createTasks')
+        @endif
+
+
+        {{-- script --}}
         <script src="{{ asset('js/sidebar.js') }}"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <script src="{{ asset('js/users.js') }}"></script>
+        <script src="{{ asset('js/tasks.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     </footer>
 </body>
 </html>

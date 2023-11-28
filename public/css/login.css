@@ -2,17 +2,17 @@
     background-image: url('https://i.ibb.co/8rpVBXW/login.jpg');
     background-size: cover;
     background-position: center;
-    height: 91.2vh;
+    height: calc(100vh - 55px); /* Mínimo 100% de la altura de la ventana gráfica */
     display: flex;
     align-items: center;
 }
 
-.card_login {
+#card-login-color {
     background-color: #222439;
     border: none;
 }
 
-.card-header_login {
+#card-header_login {
     display: flex;
     justify-content: center;
     border: none;
@@ -24,7 +24,7 @@
     justify-content: center;
 }
 
-.forms_contenido {
+#forms_contenido_login {
     width: 400px;
 }
 
@@ -140,7 +140,7 @@
     bottom: 0;
     padding: 0.75rem 0;
     margin: 0 0 0 1.85rem;
-    color: #282936;
+    color: #ffff;
     font-weight: 700;
     line-height: 1.6;
     text-align: center;

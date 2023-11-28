@@ -15,7 +15,7 @@ use App\Http\Controllers\ControllerTasks;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -26,12 +26,16 @@ Route::group(['middleware' => ['web']], function () {
 });
 
 
+
+
 Route::prefix('users')->group(function () {
-    Route::get('/getUsers', [ControllerUser::class, 'getUsers'])->name('getUsers');
+    Route::get('', [ControllerUser::class, 'getUsers'])->name('getUsers');
     Route::post('/getUser', [ControllerUser::class, 'getUser'])->name('getUser');
     Route::post('/createUsers', [ControllerUser::class, 'createUsers'])->name('createUsers');
     Route::post('/updateUsers', [ControllerUser::class, 'updateUsers'])->name('updateUsers');
     Route::post('/deleteUsers', [ControllerUser::class, 'deleteUser'])->name('deleteUsers');
+    Route::get('/optionUsers', [ControllerUser::class, 'optionUsers'])->name('optionUsers');
+
 });
 
 

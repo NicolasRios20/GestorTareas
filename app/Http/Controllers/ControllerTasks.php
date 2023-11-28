@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ModelTasks;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
+
 
 class ControllerTasks extends Controller
 {
@@ -42,25 +45,26 @@ class ControllerTasks extends Controller
     {
         try {
 
+            $user = (string)  Auth::user()->identification;
             $priorityColor = self::validateColorPriority($request->input('priority'));
-            $stateColor = self::validateColorStatus($request->input('state'));
+            $stateColor = self::validateColorStatus('not started');
             $data = [
                 'name_task' => $request->input('name_task'),
                 'description' => $request->input('description'),
-                'user_creation' => $request->input('user_creation'),
+                'user_creation' => $user,
                 'user_assigned' => $request->input('user_assigned'),
                 'priority' => $request->input('priority'),
                 'priority_color' => $priorityColor,
-                'state' => $request->input('state'),
+                'state' => 'not started',
                 'state_color' => $stateColor ,
-                'creation_date' => $request->input('creation_date'),
+                'creation_date' => Carbon::now()->toDateString(),
                 'expiration_date' => $request->input('expiration_date'),
                 'percentage' => 0,
             ];
 
             ModelTasks::createTasks($data);
-            return response()->json(['message' => 'Tarea creado exitosamente'], 200);
-
+            return response()->json(['message' => 'Tarea creado exitosamente', 'data' => $data], 200);
+            // return $user;
 
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al crear la tarea ' . $e->getMessage()], 500);
@@ -123,6 +127,7 @@ class ControllerTasks extends Controller
 
     public function validateColorPriority($priority)
     {
+        $color='';
         switch ($priority) {
             case 'high': $color = 'rojo'; break;
             case 'frequent': $color = 'azul'; break;
@@ -135,6 +140,7 @@ class ControllerTasks extends Controller
 
     public function validateColorStatus($state)
     {
+        $color='';
         switch ($state) {
             case 'not started': $color = 'rojo'; break;
             case 'in progress': $color = 'azul'; break;
