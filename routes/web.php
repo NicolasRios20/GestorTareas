@@ -25,7 +25,14 @@ Route::group(['middleware' => ['web']], function () {
     Auth::routes();
 });
 
-
+Route::prefix('tasks')->group(function (){
+    Route::get('/', [ControllerTasks::class, 'gettasks'])->name('gettasks');
+    Route::post('/getTask', [ControllerTasks::class, 'getTask'])->name('getTask');
+    Route::post('/createTasks', [ControllerTasks::class, 'createTasks'])->name('createTasks');
+    Route::post('/updateTasks', [ControllerTasks::class, 'updateTasks'])->name('updateTasks');
+    Route::post('/addPercentage', [ControllerTasks::class, 'addPercentage'])->name('addPercentage');
+    Route::post('/deleteTask', [ControllerTasks::class, 'deleteTask'])->name('deleteTask');
+});
 
 
 Route::prefix('users')->group(function () {
@@ -39,10 +46,4 @@ Route::prefix('users')->group(function () {
 });
 
 
-Route::prefix('tasks')->group(function (){
-    Route::get('/getTasks', [ControllerTasks::class, 'gettasks'])->name('gettasks');
-    Route::post('/getTask', [ControllerTasks::class, 'getTask'])->name('getTask');
-    Route::post('/createTasks', [ControllerTasks::class, 'createTasks'])->name('createTasks');
-    Route::post('/updateTasks', [ControllerTasks::class, 'updateTasks'])->name('updateTasks');
-    Route::post('/deleteTask', [ControllerTasks::class, 'deleteTask'])->name('deleteTask');
-});
+

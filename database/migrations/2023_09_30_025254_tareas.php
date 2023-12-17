@@ -15,7 +15,7 @@ class Tareas extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->bigIncrements('id_task');
-            $table->string('name_task')->unique();
+            $table->string('name_task');
             $table->text('description');
             $table->bigInteger('user_creation');
             $table->bigInteger('user_assigned');

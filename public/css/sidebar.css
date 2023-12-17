@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
 :root{
-  /* --color-default:#004f83; */
   --color-default:#222439;
   --color-second:#222439;
   --color-white:#fff;
@@ -18,7 +17,7 @@
 }
 
 body{
-  min-height: 100vh;
+  height: 100vh;
 }
 
 .sidebar{

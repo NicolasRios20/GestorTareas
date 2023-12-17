@@ -23,9 +23,9 @@
                         <label for="formGroupExampleInput">Prioridad:</label>
                         <select class="form-select form-select-sm" id="priority" name="priority" aria-label="Default select example">
                             <option selected>Seleccione Prioridad</option>
-                            <option value="high">Alta</option>
-                            <option value="frequent">Frecuento o Normal</option>
-                            <option value="low">Baja</option>
+                            <option value="Alta">Alta</option>
+                            <option value="Normal">Frecuento o Normal</option>
+                            <option value="Baja">Baja</option>
                         </select>
                     </div>
                     <div class="form-group col-6 pe-0">
@@ -50,4 +50,4 @@
         </div>
       </div>
     </div>
-  </div>
+</div>

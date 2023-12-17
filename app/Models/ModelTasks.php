@@ -12,7 +12,22 @@ class ModelTasks extends Model
 
     public static function getTasks()
     {
-        return DB::table('tasks')->get();
+        return $tasks = DB::table('tasks')
+            ->select('tasks.*', 'user_creation.name as creator_name', 'user_assigned.name as assignee_name')
+            ->join('users as user_creation', 'tasks.user_creation', '=', 'user_creation.identification')
+            ->join('users as user_assigned', 'tasks.user_assigned', '=', 'user_assigned.identification')
+            ->get();
+    }
+
+    public static function getTaskUser($userId)
+    {
+        return DB::table('tasks')
+            ->select('tasks.*', 'user_creation.name as creator_name', 'user_assigned.name as assignee_name')
+            ->join('users as user_creation', 'tasks.user_creation', '=', 'user_creation.identification')
+            ->join('users as user_assigned', 'tasks.user_assigned', '=', 'user_assigned.identification')
+            ->where('user_creation', $userId)
+            ->orWhere('user_assigned', $userId)
+            ->get();
     }
 
 

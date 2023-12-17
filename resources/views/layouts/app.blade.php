@@ -12,8 +12,6 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
-
-
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
@@ -24,12 +22,9 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
     <!-- Styles -->
-    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> --}}
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/sidebar.css') }}" rel="stylesheet">
     <link href="{{ asset('css/login.css') }}" rel="stylesheet">
-    {{-- <link href="{{ asset('css/alertas.css') }}" rel="stylesheet"> --}}
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
@@ -49,7 +44,7 @@
                 </div>
                 <ul class="nav-list">
                     <li>
-                        <a href="{{ route('home') }}">
+                        <a href="{{ route('gettasks') }}">
                         <i class="bx bx-grid-alt"></i>
                         <span class="link_name">Tareas</span>
                         </a>
@@ -104,7 +99,7 @@
                 </nav>
 
                 {{-- contenido usuaarilos logeados --}}
-                <main class="py-4">
+                <main class="p-4">
                     @yield('content')
                 </main>
 
@@ -153,6 +148,9 @@
         @if (Auth::check())
             @include('users.editUser')
             @include('tasks.createTasks')
+            @include('tasks.descriptionTasks')
+            @include('tasks.progressTasks')
+            @include('tasks.comments')
         @endif
 
 

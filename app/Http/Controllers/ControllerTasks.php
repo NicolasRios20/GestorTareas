@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ModelTasks;
+use App\Models\ModelComments;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 
@@ -14,10 +15,15 @@ class ControllerTasks extends Controller
     public function getTasks(Request $request)
     {
         try {
-
-            $dataTasks = ModelTasks::getTasks();
-            return response()->json(['dataTasks' => $dataTasks], 200);
-
+            $userRol = Auth::user()->rol;
+            $userIdentification = (string)  Auth::user()->identification;
+            if ($userRol == 'Administrador') {
+                $dataTasks = ModelTasks::getTasks();
+                return view('home', ['dataTasks' => $dataTasks]);
+            } else {
+                $dataTasks = ModelTasks::getTaskUser($userIdentification);
+                return view('home', ['dataTasks' => $dataTasks]);
+            }
         } catch (\Exeption $e) {
             return response()->json(['error' => 'A ocurrido un error al obtener las tareas'], 500);
         }
@@ -32,7 +38,7 @@ class ControllerTasks extends Controller
 
             $id_task = $request->input('id_task');
             $dataTask = ModelTasks::getTask($id_task);
-            return response()->json(['dataTask' => $dataTask], 500);
+            return response()->json(['dataTask' => $dataTask], 200);
 
         } catch (\Eception $e) {
             return response()->json(['error' => 'A ocurrido un error al obtener la tarea'], 500);
@@ -47,7 +53,7 @@ class ControllerTasks extends Controller
 
             $user = (string)  Auth::user()->identification;
             $priorityColor = self::validateColorPriority($request->input('priority'));
-            $stateColor = self::validateColorStatus('not started');
+            $stateColor = self::validateColorStatus('No Iniciado');
             $data = [
                 'name_task' => $request->input('name_task'),
                 'description' => $request->input('description'),
@@ -55,7 +61,7 @@ class ControllerTasks extends Controller
                 'user_assigned' => $request->input('user_assigned'),
                 'priority' => $request->input('priority'),
                 'priority_color' => $priorityColor,
-                'state' => 'not started',
+                'state' => 'No Iniciado',
                 'state_color' => $stateColor ,
                 'creation_date' => Carbon::now()->toDateString(),
                 'expiration_date' => $request->input('expiration_date'),
@@ -107,6 +113,50 @@ class ControllerTasks extends Controller
     }
 
 
+    // funcion para agregar prcentaje
+    public function addPercentage(Request $request)
+    {
+        $dataTask = ModelTasks::getTask($request->input('idTask'));
+        $percentage = $request->input('percentage') + $dataTask->percentage;
+
+        if ($percentage > 0 && $percentage < 100) {
+            $state = 'En progreso';
+            $state_color = self::validateColorStatus($state);
+            $updateData = [
+                'state' => $state,
+                'state_color' => $state_color,
+                'percentage' => $percentage,
+            ];
+            $updateTask = ModelTasks::updateTasks($request->input('idTask'), $updateData);
+        }elseif ($percentage >= 100) {
+            $state = 'Completado';
+            $state_color = self::validateColorStatus($state);
+            $updateData = [
+                'state' => $state,
+                'state_color' => $state_color,
+                'percentage' => 100,
+            ];
+            $updateTask = ModelTasks::updateTasks($request->input('idTask'), $updateData);
+        }
+
+        if ($updateData) {
+            $userIdentification = (string)  Auth::user()->identification;
+            $commentsData = [
+                'id_task' => $request->input('idTask'),
+                'identification' => $userIdentification,
+                'comment' => $request->input('comment'),
+                'creation_date' => Carbon::now()->toDateString(),
+            ];
+            ModelComments::createComments($commentsData);
+            $dataTask = ModelTasks::getTask($request->input('idTask'));
+            return response()->json(['message' => 'Porcentaje agregado Exitosamente', 'data' => $dataTask], 200);
+        } else {
+            return response()->json(['message' => 'A ocurrido un error'], 500);
+        }
+
+    }
+
+
     // funcion para eliminar tarea
     public function deleteTask(Request $request)
     {
@@ -129,9 +179,9 @@ class ControllerTasks extends Controller
     {
         $color='';
         switch ($priority) {
-            case 'high': $color = 'rojo'; break;
-            case 'frequent': $color = 'azul'; break;
-            case 'low': $color = 'amarillo'; break;
+            case 'Alta': $color = 'danger'; break;
+            case 'Normal': $color = 'primary'; break;
+            case 'Baja': $color = 'warning'; break;
         }
 
         return $color;
@@ -142,9 +192,9 @@ class ControllerTasks extends Controller
     {
         $color='';
         switch ($state) {
-            case 'not started': $color = 'rojo'; break;
-            case 'in progress': $color = 'azul'; break;
-            case 'completed': $color = 'verde'; break;
+            case 'No Iniciado': $color = 'danger'; break;
+            case 'En progreso': $color = 'primary'; break;
+            case 'Completado': $color = 'success'; break;
         }
 
         return $color;

@@ -2,9 +2,10 @@
     background-image: url('https://i.ibb.co/8rpVBXW/login.jpg');
     background-size: cover;
     background-position: center;
-    height: calc(100vh - 55px); /* Mínimo 100% de la altura de la ventana gráfica */
+    height: calc(100vh - 56px);
     display: flex;
     align-items: center;
+    overflow-x: hidden;
 }
 
 #card-login-color {
